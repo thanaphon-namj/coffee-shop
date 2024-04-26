@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "aws/aws-sdk-php": "^3.305",
         "inertiajs/inertia-laravel": "^1.0",
         "laravel/breeze": "^2.0",
         "laravel/framework": "^11.0",
@@ -15,6 +16,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "fly-apps/dockerfile-laravel": "^1.0",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
