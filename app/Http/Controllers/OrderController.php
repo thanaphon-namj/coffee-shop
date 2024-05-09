@@ -7,6 +7,7 @@ use App\Models\OrderDetail;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -42,7 +43,7 @@ class OrderController extends Controller
     {
         $url = env('APP_URL', '');
         $uuid = sha1(time());
-        $request->session()->put($uuid, false);
+        Cache::put($uuid, false, now()->addMinutes(10));
 
         return response()->json([
             'success' => true,
@@ -61,12 +62,11 @@ class OrderController extends Controller
     public function paid(Request $request): JsonResponse
     {
         $uuid = $request->input('uuid');
-        $request->session()->put($uuid, true);
-        $paid = $request->session()->get($uuid, false);
+        Cache::put($uuid, true, now()->addMinutes(10));
 
         return response()->json([
             'success' => true,
-            'paid' => $paid,
+            'paid' => true,
             'uuid' => $uuid,
         ]);
     }
@@ -74,7 +74,7 @@ class OrderController extends Controller
     public function checkpay(Request $request): JsonResponse
     {
         $uuid = $request->input('uuid');
-        $paid = $request->session()->get($uuid, false);
+        $paid = Cache::get($uuid, false);
 
         return response()->json([
             'success' => true,
