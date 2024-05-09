@@ -49,6 +49,7 @@ class ProductController extends Controller
     public function destroy(string $id): RedirectResponse
     {
         Product::where('ProductID', $id)->delete();
+
         return redirect(route('products.index'));
     }
 }

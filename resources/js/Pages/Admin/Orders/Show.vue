@@ -18,7 +18,6 @@ interface AdminOrder extends Order {
 
 const props = defineProps<{
     order: AdminOrder;
-    canDelete: boolean;
 }>();
 
 const details = computed<AdminOrderDetail[]>(() => props.order.details);
@@ -126,7 +125,6 @@ const customer = computed<Customer | null>(() => props.order.customer);
                 ย้อนกลับ
             </Link>
             <Link
-                v-if="canDelete"
                 :href="route('orders.destroy', order.OrderID)"
                 class="btn btn-warning ms-3"
                 style="width: 100px"

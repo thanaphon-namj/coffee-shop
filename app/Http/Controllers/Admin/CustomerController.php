@@ -49,6 +49,7 @@ class CustomerController extends Controller
     public function destroy(string $id): RedirectResponse
     {
         Customer::where('CustomerID', $id)->delete();
+
         return redirect(route('customers.index'));
     }
 }

@@ -22,7 +22,6 @@ class OrderController extends Controller
     {
         return Inertia::render('Admin/Orders/Show', [
             'order' => Order::with(['employee', 'customer', 'details', 'details.product'])->where('OrderID', $id)->first(),
-            'canDelete' => OrderDetail::where('OrderID', $id)->first() === null,
         ]);
     }
 
@@ -30,6 +29,7 @@ class OrderController extends Controller
     {
         OrderDetail::where('OrderID', $id)->delete();
         Order::where('OrderID', $id)->delete();
+
         return redirect(route('orders.index'));
     }
 }

@@ -51,6 +51,7 @@ class EmployeeController extends Controller
     public function destroy(string $id): RedirectResponse
     {
         Employee::where('EmployeeID', $id)->delete();
+
         return redirect(route('employees.index'));
     }
 }
