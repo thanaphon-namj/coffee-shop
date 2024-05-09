@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\OrderDetail;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -41,6 +42,13 @@ class ProductController extends Controller
     {
         return Inertia::render('Admin/Products/Show', [
             'product' => Product::where('ProductID', $id)->first(),
+            'canDelete' => OrderDetail::where('ProductID', $id)->first() === null,
         ]);
+    }
+
+    public function destroy(string $id): RedirectResponse
+    {
+        Product::where('ProductID', $id)->delete();
+        return redirect(route('products.index'));
     }
 }

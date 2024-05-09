@@ -18,21 +18,25 @@ Route::middleware(Authenticate::class)->group(function () {
         // Orders
         Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
+        Route::delete('/orders/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'destroy'])->name('orders.destroy');
         // Products
         Route::get('/products', [\App\Http\Controllers\Admin\ProductController::class, 'index'])->name('products.index');
         Route::post('/products', [\App\Http\Controllers\Admin\ProductController::class,'store'])->name('products.store');
         Route::get('/products/create', [\App\Http\Controllers\Admin\ProductController::class, 'create'])->name('products.create');
         Route::get('/products/{id}', [\App\Http\Controllers\Admin\ProductController::class, 'show'])->name('products.show');
+        Route::delete('/products/{id}', [\App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('products.destroy');
         // Customers
         Route::get('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('customers.index');
         Route::post('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'store'])->name('customers.store');
         Route::get('/customers/create', [\App\Http\Controllers\Admin\CustomerController::class, 'create'])->name('customers.create');
         Route::get('/customers/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('customers.show');
+        Route::delete('/customers/{id}', [\App\Http\Controllers\Admin\CustomerController::class, 'destroy'])->name('customers.destroy');
         // Employees
         Route::get('/employees', [\App\Http\Controllers\Admin\EmployeeController::class, 'index'])->name('employees.index');
         Route::post('/employees', [\App\Http\Controllers\Admin\EmployeeController::class, 'store'])->name('employees.store');
         Route::get('/employees/create', [\App\Http\Controllers\Admin\EmployeeController::class, 'create'])->name('employees.create');
         Route::get('/employees/{id}', [\App\Http\Controllers\Admin\EmployeeController::class, 'show'])->name('employees.show');
+        Route::delete('/employees/{id}', [\App\Http\Controllers\Admin\EmployeeController::class, 'destroy'])->name('employees.destroy');
     });
 });
 

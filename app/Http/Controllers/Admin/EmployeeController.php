@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use App\Models\Order;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -43,6 +44,13 @@ class EmployeeController extends Controller
     {
         return Inertia::render('Admin/Employees/Show', [
             'employee' => Employee::where('EmployeeID', $id)->first(),
+            'canDelete' => Order::where('EmployeeID', $id)->first() === null,
         ]);
+    }
+
+    public function destroy(string $id): RedirectResponse
+    {
+        Employee::where('EmployeeID', $id)->delete();
+        return redirect(route('employees.index'));
     }
 }

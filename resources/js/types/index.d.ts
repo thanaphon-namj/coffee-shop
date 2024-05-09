@@ -7,6 +7,14 @@ export interface Order {
   CustomerID: number | null;
 }
 
+export interface OrderDetail {
+  OrderDetailID: number;
+  Quantity: number;
+  Total: number;
+  OrderID: number;
+  ProductID: number;
+}
+
 export interface Product {
   ProductID: number;
   ProductName: string;

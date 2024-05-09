@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -41,6 +42,13 @@ class CustomerController extends Controller
     {
         return Inertia::render('Admin/Customers/Show', [
             'customer' => Customer::where('CustomerID', $id)->first(),
+            'canDelete' => Order::where('CustomerID', $id)->first() === null,
         ]);
+    }
+
+    public function destroy(string $id): RedirectResponse
+    {
+        Customer::where('CustomerID', $id)->delete();
+        return redirect(route('customers.index'));
     }
 }
