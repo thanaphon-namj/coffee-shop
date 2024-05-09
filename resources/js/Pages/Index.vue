@@ -307,7 +307,7 @@ onMounted(() => {
                                     :href="route('dashboard')"
                                     class="dropdown-item"
                                 >
-                                    Admin Dashboard
+                                    หน้าผู้ดูแลระบบ
                                 </Link>
                             </li>
                             <li>

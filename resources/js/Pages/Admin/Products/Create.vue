@@ -116,7 +116,7 @@ const submit = () => {
                     </div>
                     <div class="mb-3">
                         <label class="form-label">รูปภาพ</label>
-                        <div v-if="form.imageUrl" class="d-grid col-3">
+                        <div v-if="form.imageUrl" class="d-grid col-6">
                             <img
                                 :src="form.imageUrl"
                                 class="img-thumbnail border-0"

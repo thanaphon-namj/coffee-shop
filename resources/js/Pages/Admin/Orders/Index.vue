@@ -26,7 +26,7 @@ defineProps<{
                     <th class="text-center">พนักงานขาย</th>
                     <th class="text-center">ลูกค้า</th>
                     <th class="text-center">วิธีชำระเงิน</th>
-                    <th class="text-center">ยอดรวม</th>
+                    <th class="text-center">รวมทั้งหมด</th>
                     <th width="8%"></th>
                 </tr>
             </thead>
