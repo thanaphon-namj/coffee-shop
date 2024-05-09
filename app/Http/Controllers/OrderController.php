@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Carbon\Carbon;
@@ -15,6 +16,7 @@ class OrderController extends Controller
 {
     public function store(Request $request): JsonResponse
     {
+        $customerID = $request->input('customerID');
         $details = $request->input('details');
 
         $order = Order::create([
@@ -22,7 +24,7 @@ class OrderController extends Controller
             'Payment' => $request->input('payment'),
             'PurchaseDate' => Carbon::now(),
             'EmployeeID' => $request->input('employeeID'),
-            'CustomerID' => $request->input('customerID'),
+            'CustomerID' => $customerID,
         ]);
 
         foreach ($details as $detail) {
@@ -32,6 +34,10 @@ class OrderController extends Controller
                 'OrderID' => $order->OrderID,
                 'ProductID' => $detail['productID'],
             ]);
+        }
+
+        if ($customerID) {
+            Customer::where('CustomerID', $customerID)->increment('points', 100);
         }
 
         return response()->json([
