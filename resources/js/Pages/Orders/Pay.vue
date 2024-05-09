@@ -8,14 +8,18 @@ const props = defineProps<{
 }>();
 
 const isLoading = ref<boolean>(false);
+const isPaid = ref<boolean>(false);
 
-const onPay = () => {
+const onPay = async () => {
     isLoading.value = true;
 
     try {
-        axios.post(route("orders.paid"), {
+        const res = await axios.post(route("orders.paid"), {
             uuid: props.uuid,
         });
+        if (res.data.success === true && res.data.paid === true) {
+            isPaid.value = true;
+        }
     } finally {
         isLoading.value = false;
     }
@@ -31,7 +35,7 @@ const onPay = () => {
             type="button"
             class="btn btn-success btn-lg"
             style="width: 200px"
-            :disabled="isLoading"
+            :disabled="isLoading || isPaid"
             @click="onPay"
         >
             จ่ายเงิน

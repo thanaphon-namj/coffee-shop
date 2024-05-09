@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\OrderDetail;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -9,6 +12,32 @@ use Inertia\Response;
 
 class OrderController extends Controller
 {
+    public function store(Request $request): JsonResponse
+    {
+        $details = $request->input('details');
+
+        $order = Order::create([
+            'Total' => $request->input('total'),
+            'Payment' => $request->input('payment'),
+            'PurchaseDate' => Carbon::now(),
+            'EmployeeID' => $request->input('employeeID'),
+            'CustomerID' => $request->input('customerID'),
+        ]);
+
+        foreach ($details as $detail) {
+            OrderDetail::create([
+                'Quantity' => $detail['quantity'],
+                'Total' => $detail['total'],
+                'OrderID' => $order->OrderID,
+                'ProductID' => $detail['productID'],
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $order,
+        ]);
+    }
     public function qr(Request $request): JsonResponse
     {
         $url = env('APP_URL', '');
@@ -33,9 +62,11 @@ class OrderController extends Controller
     {
         $uuid = $request->input('uuid');
         $request->session()->put($uuid, true);
+        $paid = $request->session()->get($uuid, false);
 
         return response()->json([
             'success' => true,
+            'paid' => $paid,
             'uuid' => $uuid,
         ]);
     }

@@ -37,13 +37,13 @@ Route::middleware(Authenticate::class)->group(function () {
 });
 
 Route::middleware('guest')->group(function () {
-    Route::get('/orders/pay/{id}', [OrderController::class, 'pay']);
     Route::get('/login', [EmployeeController::class, 'index'])->name('login');
 });
 
 Route::controller(OrderController::class)->group(function () {
     Route::post('/orders', 'store')->name('orders.store');
     Route::post('/orders/qr', 'qr')->name('orders.qr');
+    Route::get('/orders/pay/{id}', 'pay');
     Route::post('/orders/paid', 'paid')->name('orders.paid');
     Route::post('/orders/pay/check', 'checkpay')->name('orders.checkpay');
 });

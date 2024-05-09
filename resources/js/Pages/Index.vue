@@ -37,22 +37,6 @@ const total = computed<number>(() => {
     return details.value.reduce((prev, curr) => prev + curr.total, 0);
 });
 
-const form = reactive<{
-    total: number;
-    payment: PaymentMethods;
-    customerID: number | null;
-    details: {
-        productID: number;
-        quantity: number;
-        total: number;
-    }[];
-}>({
-    total: 0,
-    payment: "Cash",
-    customerID: null,
-    details: [],
-});
-
 const onIncrementQuantity = (productID: number) => {
     details.value = details.value.map((detail) => {
         if (detail.productID === productID) {
@@ -113,23 +97,19 @@ const onRemove = (productID: number) => {
 };
 
 const onCancel = () => {
-    form.total = 0;
-    form.payment = "Cash";
-    form.customerID = null;
-    form.details = [];
-
     details.value = [];
-
     onCancelCustomer();
 };
 
 const isLoading = ref<boolean>(false);
 
 const payment = reactive<{
+    method: PaymentMethods;
     amount: number;
     qr: string;
     uuid: string;
 }>({
+    method: "Cash",
     amount: 0,
     qr: "",
     uuid: "",
@@ -142,7 +122,7 @@ const change = computed<number>(() => payment.amount - total.value);
 const intervalID = ref<number | undefined>();
 
 const onSelectPayment = (method: PaymentMethods) => {
-    form.payment = method;
+    payment.method = method;
     if (method === "PromptPay") {
         payment.amount = 0;
     }
@@ -158,10 +138,6 @@ const onCheckPayment = async () => {
     });
     if (res.data.success === true && res.data.paid === true) {
         clearInterval(intervalID.value);
-
-        payment.qr = "";
-        payment.uuid = "";
-
         submit();
     }
 };
@@ -190,7 +166,7 @@ const onCancelQR = () => {
 };
 
 const onClosePayment = () => {
-    form.payment = "Cash";
+    payment.method = "Cash";
     payment.amount = 0;
 };
 
@@ -198,9 +174,7 @@ const submit = async () => {
     isLoading.value = true;
 
     try {
-        form.total = total.value;
-        form.customerID = customer.id;
-        form.details = details.value.map((detail) => {
+        const items = details.value.map((detail) => {
             return {
                 productID: detail.productID,
                 quantity: detail.quantity,
@@ -208,9 +182,18 @@ const submit = async () => {
             };
         });
 
-        const res = await axios.post(route("orders.store"), form);
+        const res = await axios.post(route("orders.store"), {
+            total: total.value,
+            payment: payment.method,
+            customerID: customer.id,
+            employeeID: props.employee.EmployeeID,
+            details: items,
+        });
         if (res.data.success === true) {
+            payment.method = "Cash";
             payment.amount = 0;
+            payment.qr = "";
+            payment.uuid = "";
 
             onCancel();
 
@@ -685,7 +668,7 @@ onMounted(() => {
                                                     class="nav-link"
                                                     :class="{
                                                         active:
-                                                            form.payment ===
+                                                            payment.method ===
                                                             'Cash',
                                                     }"
                                                     data-bs-toggle="pill"
@@ -703,7 +686,7 @@ onMounted(() => {
                                                     class="nav-link"
                                                     :class="{
                                                         active:
-                                                            form.payment ===
+                                                            payment.method ===
                                                             'PromptPay',
                                                     }"
                                                     data-bs-toggle="pill"
@@ -726,7 +709,7 @@ onMounted(() => {
                                             class="tab-pane"
                                             :class="{
                                                 'show active':
-                                                    form.payment === 'Cash',
+                                                    payment.method === 'Cash',
                                             }"
                                         >
                                             <div class="row">
@@ -883,7 +866,7 @@ onMounted(() => {
                                             class="tab-pane"
                                             :class="{
                                                 'show active':
-                                                    form.payment ===
+                                                    payment.method ===
                                                     'PromptPay',
                                             }"
                                         >
