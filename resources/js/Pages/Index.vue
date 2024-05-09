@@ -4,12 +4,13 @@ import { Head, Link } from "@inertiajs/vue3";
 import axios from "axios";
 import { Modal } from "bootstrap";
 import { priceFormat, numberFormat } from "@/utils/format";
-import { Product, PaymentMethods } from "@/types";
+import { Product, Employee, PaymentMethods } from "@/types";
 
 import QRCode from "qrcode.vue";
 
 const props = defineProps<{
     products: Product[];
+    employee: Employee;
 }>();
 
 const products = ref<Product[]>([]);
@@ -157,6 +158,10 @@ const onCheckPayment = async () => {
     });
     if (res.data.success === true && res.data.paid === true) {
         clearInterval(intervalID.value);
+
+        payment.qr = "";
+        payment.uuid = "";
+
         submit();
     }
 };
@@ -205,6 +210,8 @@ const submit = async () => {
 
         const res = await axios.post(route("orders.store"), form);
         if (res.data.success === true) {
+            payment.amount = 0;
+
             onCancel();
 
             Modal.getInstance("#paymentModal")?.hide();
@@ -289,7 +296,10 @@ onMounted(() => {
         <header class="py-2 mb-3 border-bottom">
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h1 class="navbar-brand user-select-none mb-0">
+                    <h1
+                        class="navbar-brand user-select-none mb-0"
+                        style="font-size: 20px"
+                    >
                         Coffee Shop
                     </h1>
                     <form role="search">
@@ -306,7 +316,7 @@ onMounted(() => {
                             class="nav-link dropdown-toggle"
                             data-bs-toggle="dropdown"
                         >
-                            {{ "Username" }}
+                            {{ employee.FirstName }}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
