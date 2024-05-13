@@ -1,12 +1,13 @@
 import './bootstrap';
 import '../css/app.css';
+import 'bootstrap'
 
 import { createApp, h, DefineComponent } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Coffee Shop';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
